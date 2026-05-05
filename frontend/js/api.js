@@ -1,4 +1,4 @@
-const USE_MOCK = false;   
+const USE_MOCK = false;
 const API_BASE = 'http://localhost:5000/api';
 
 const MOCK_PARCELLES = [
@@ -37,58 +37,47 @@ const MOCK_OBSERVATIONS = [
   { id:7,  date:'2026-04-13', etat:'Maladie détectée', parcelle_id:3,  commentaire:'Sol sec'          },
   { id:8,  date:'2026-04-07', etat:'Maladie détectée', parcelle_id:3,  commentaire:'Feuilles jaunies' },
   { id:9,  date:'2026-03-15', etat:'Risque maladie',   parcelle_id:3,  commentaire:'Sol sec'          },
-  { id:10, date:'2026-03-09', etat:'Maladie détectée', parcelle_id:2,  commentaire:'Humidité élevée'  },
-  { id:11, date:'2026-03-02', etat:'OK',               parcelle_id:2,  commentaire:'Sol sec'          },
-  { id:12, date:'2026-03-01', etat:'Stress hydrique',  parcelle_id:3,  commentaire:'Sol sec'          },
+  { id:10, date:'2026-03-09', etat:'OK',               parcelle_id:2,  commentaire:'RAS'              },
 ];
 
 const MOCK_ALERTES = [
-  { id:1,  date:'2026-04-25', type:'Risque maladie',  parcelle_id:3,  niveau:1, source:'auto'        },
-  { id:2,  date:'2026-04-21', type:'Risque maladie',  parcelle_id:9,  niveau:3, source:'auto'        },
-  { id:3,  date:'2026-04-21', type:'Risque maladie',  parcelle_id:3,  niveau:3, source:'auto'        },
-  { id:4,  date:'2026-04-19', type:'Stress hydrique', parcelle_id:9,  niveau:2, source:'auto'        },
-  { id:5,  date:'2026-04-19', type:'Risque maladie',  parcelle_id:7,  niveau:1, source:'auto'        },
-  { id:6,  date:'2026-04-18', type:'Stress hydrique', parcelle_id:2,  niveau:1, source:'auto'        },
-  { id:7,  date:'2026-04-17', type:'Stress hydrique', parcelle_id:3,  niveau:2, source:'auto'        },
-  { id:8,  date:'2026-04-15', type:'Stress hydrique', parcelle_id:6,  niveau:2, source:'auto'        },
-  { id:9,  date:'2026-04-14', type:'Stress hydrique', parcelle_id:4,  niveau:3, source:'auto'        },
-  { id:10, date:'2026-04-14', type:'Risque maladie',  parcelle_id:7,  niveau:3, source:'auto'        },
-  { id:11, date:'2026-04-12', type:'Stress hydrique', parcelle_id:1,  niveau:2, source:'observation' },
-  { id:12, date:'2026-04-09', type:'Risque maladie',  parcelle_id:7,  niveau:3, source:'auto'        },
+  { id:1,  date:'2026-04-25', type:'Risque maladie',  parcelle_id:3,  niveau:1, source:'auto' },
+  { id:2,  date:'2026-04-21', type:'Risque maladie',  parcelle_id:9,  niveau:3, source:'auto' },
+  { id:3,  date:'2026-04-21', type:'Risque maladie',  parcelle_id:3,  niveau:3, source:'auto' },
+  { id:4,  date:'2026-04-19', type:'Stress hydrique', parcelle_id:9,  niveau:2, source:'auto' },
+  { id:5,  date:'2026-04-19', type:'Risque maladie',  parcelle_id:7,  niveau:1, source:'auto' },
+  { id:6,  date:'2026-04-18', type:'Stress hydrique', parcelle_id:2,  niveau:1, source:'auto' },
+  { id:7,  date:'2026-04-17', type:'Stress hydrique', parcelle_id:3,  niveau:2, source:'auto' },
+  { id:8,  date:'2026-04-15', type:'Stress hydrique', parcelle_id:6,  niveau:2, source:'auto' },
+  { id:9,  date:'2026-04-14', type:'Stress hydrique', parcelle_id:4,  niveau:3, source:'auto' },
+  { id:10, date:'2026-04-14', type:'Risque maladie',  parcelle_id:7,  niveau:3, source:'auto' },
 ];
-
-async function fetchData(endpoint, mockData) {
-  if (USE_MOCK) return Promise.resolve(JSON.parse(JSON.stringify(mockData)));
-  const res = await fetch(API_BASE + endpoint);
-  if (!res.ok) throw new Error(`Erreur API ${res.status}`);
-  return res.json();
-}
-
-const API = {
-  getParcelles:    ()    => fetchData('/parcelles',    MOCK_PARCELLES),
-  getParcelle:     (id)  => fetchData(`/parcelles/${id}`, MOCK_PARCELLES.find(p => p.id === id)),
-  getMeteo:        ()    => fetchData('/meteo',        MOCK_METEO),
-  getObservations: (pid) => fetchData(
-    pid ? `/observations?parcelle_id=${pid}` : '/observations',
-    pid ? MOCK_OBSERVATIONS.filter(o => o.parcelle_id === pid) : MOCK_OBSERVATIONS
-  ),
-  getAlertes:      ()    => fetchData('/alertes',      MOCK_ALERTES),
-  getStats:        ()    => fetchData('/dashboard/stats', {
-    total_parcelles:   10,
-    total_alertes:     MOCK_ALERTES.length,
-    alertes_critiques: MOCK_ALERTES.filter(a => a.niveau === 3).length,
-    maladies:          MOCK_OBSERVATIONS.filter(o => o.etat === 'Maladie détectée').length,
-    observations_ok:   MOCK_OBSERVATIONS.filter(o => o.etat === 'OK').length,
-  }),
-};
-
-function formatDate(str) {
-  return new Date(str).toLocaleDateString('fr-FR');
-}
 
 const BADGE_MAP = {
   'OK':               '<span class="badge badge-ok">OK</span>',
   'Risque maladie':   '<span class="badge badge-risk">Risque maladie</span>',
   'Maladie détectée': '<span class="badge badge-disease">Maladie détectée</span>',
   'Stress hydrique':  '<span class="badge badge-stress">Stress hydrique</span>',
+};
+
+function formatDate(str) {
+  return new Date(str).toLocaleDateString('fr-FR');
+}
+
+async function fetchData(endpoint, mockData) {
+  if (USE_MOCK) return mockData;
+  const res = await fetch(API_BASE + endpoint);
+  if (!res.ok) throw new Error('Erreur ' + res.status);
+  return res.json();
+}
+
+const API = {
+  getParcelles:    ()    => fetchData('/parcelles', MOCK_PARCELLES),
+  getParcelle:     (id)  => fetchData('/parcelles/' + id, MOCK_PARCELLES.find(p => p.id === id)),
+  getMeteo:        ()    => fetchData('/meteo', MOCK_METEO),
+  getObservations: (pid) => fetchData(
+    pid ? '/observations?parcelle_id=' + pid : '/observations',
+    pid ? MOCK_OBSERVATIONS.filter(o => o.parcelle_id === pid) : MOCK_OBSERVATIONS
+  ),
+  getAlertes: () => fetchData('/alertes', MOCK_ALERTES),
 };
