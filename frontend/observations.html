@@ -28,6 +28,7 @@
     <p class="page-subtitle">Saisie et historique des états de cultures</p>
 
     <div style="display:grid;grid-template-columns:320px 1fr;gap:24px;align-items:start;">
+
       <div class="card">
         <div class="card-header">Nouvelle observation</div>
         <div class="card-body">
@@ -66,7 +67,8 @@
       <div class="card">
         <div class="card-header">
           Historique
-          <div style="display:flex;gap:8px;">
+          <div style="display:flex;align-items:center;gap:12px;">
+            <span id="obs-total" style="font-size:13px;color:var(--text-muted);font-weight:400;">Total : —</span>
             <select id="filtre-parcelle" style="padding:6px 10px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:13px;background:var(--bg-card);">
               <option value="">Toutes les parcelles</option>
             </select>
@@ -84,6 +86,7 @@
           </table>
         </div>
       </div>
+
     </div>
   </main>
 </div>

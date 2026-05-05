@@ -24,10 +24,15 @@ async function init() {
 
 function renderObs(liste) {
   const tbody = document.getElementById('obs-tbody');
+  const total = document.getElementById('obs-total');
+
+  total.textContent = `Total : ${liste.length} observation(s)`;
+
   if (!liste.length) {
     tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:var(--text-muted);padding:20px">Aucune observation.</td></tr>';
     return;
   }
+
   tbody.innerHTML = [...liste].sort((a,b) => new Date(b.date)-new Date(a.date)).map(o => {
     const p = allParcelles.find(p => p.id === Number(o.parcelle_id));
     return `<tr>
