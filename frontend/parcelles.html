@@ -9,6 +9,9 @@
   <link rel="stylesheet" href="css/reset.css">
   <link rel="stylesheet" href="css/variables.css">
   <link rel="stylesheet" href="css/main.css">
+  <style>
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
 </head>
 <body>
 <div class="app-layout">
@@ -27,7 +30,7 @@
     <h1 class="page-title">Parcelles</h1>
     <p class="page-subtitle">10 parcelles actives — saison 2026</p>
 
-    <div style="display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap;">
+    <div style="display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap;align-items:center;">
       <select id="filtre-zone" style="padding:8px 12px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:14px;background:var(--bg-card);">
         <option value="">Toutes les zones</option>
         <option>Zone A</option><option>Zone B</option><option>Zone C</option><option>Zone D</option><option>Zone E</option>
@@ -38,6 +41,10 @@
       </select>
       <input type="text" id="filtre-search" placeholder="Rechercher…"
         style="padding:8px 12px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:14px;flex:1;min-width:160px;">
+      <button onclick="resetFiltres()"
+        style="padding:8px 14px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:13px;background:var(--bg-card);color:var(--text-secondary);cursor:pointer;white-space:nowrap;">
+        Réinitialiser
+      </button>
     </div>
 
     <div id="parcelles-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;"></div>
@@ -46,7 +53,7 @@
       <div style="background:var(--bg-card);border-radius:var(--radius);width:100%;max-width:520px;overflow:hidden;">
         <div style="padding:18px 22px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;">
           <span id="modal-title" style="font-weight:700;font-size:17px;"></span>
-          <button onclick="closeModal()" style="background:none;border:none;font-size:20px;color:var(--text-muted);">✕</button>
+          <button onclick="closeModal()" style="background:none;border:none;font-size:20px;color:var(--text-muted);cursor:pointer;">✕</button>
         </div>
         <div id="modal-body" style="padding:22px;"></div>
       </div>

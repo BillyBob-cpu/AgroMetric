@@ -6,7 +6,18 @@ document.getElementById('obs-date').value = new Date().toISOString().split('T')[
 let allObs = [];
 let allParcelles = [];
 
+function showSpinner() {
+  document.getElementById('obs-tbody').innerHTML = `
+    <tr><td colspan="4" style="text-align:center;padding:40px;">
+      <div style="display:inline-flex;align-items:center;gap:10px;color:var(--text-muted);font-size:14px;">
+        <div style="width:18px;height:18px;border:2px solid var(--border);border-top-color:var(--color-primary);border-radius:50%;animation:spin 0.7s linear infinite;"></div>
+        Chargement…
+      </div>
+    </td></tr>`;
+}
+
 async function init() {
+  showSpinner();
   allParcelles = await API.getParcelles();
   allObs       = await API.getObservations();
 
@@ -29,7 +40,10 @@ function renderObs(liste) {
   total.textContent = `Total : ${liste.length} observation(s)`;
 
   if (!liste.length) {
-    tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:var(--text-muted);padding:20px">Aucune observation.</td></tr>';
+    tbody.innerHTML = `
+      <tr><td colspan="4" style="text-align:center;padding:40px;color:var(--text-muted);">
+        Aucune observation trouvée.
+      </td></tr>`;
     return;
   }
 
@@ -53,6 +67,12 @@ function filtrer() {
   ));
 }
 
+function resetFiltres() {
+  document.getElementById('filtre-parcelle').value = '';
+  document.getElementById('filtre-etat').value     = '';
+  renderObs(allObs);
+}
+
 document.getElementById('filtre-parcelle').addEventListener('change', filtrer);
 document.getElementById('filtre-etat').addEventListener('change', filtrer);
 
@@ -70,6 +90,12 @@ async function submitObservation() {
     msgEl.textContent = 'Veuillez remplir la date et la parcelle.';
     return;
   }
+
+  // Confirmation avant envoi
+  const parcelle = allParcelles.find(p => p.id === data.parcelle_id);
+  const nomParcelle = parcelle ? parcelle.nom : 'Parcelle ' + data.parcelle_id;
+  const confirmer = confirm(`Confirmer l'observation ?\n\n📍 ${nomParcelle}\n📋 État : ${data.etat}\n📅 Date : ${data.date}`);
+  if (!confirmer) return;
 
   if (USE_MOCK) {
     allObs.unshift({ id: Date.now(), ...data });

@@ -9,6 +9,9 @@
   <link rel="stylesheet" href="css/reset.css">
   <link rel="stylesheet" href="css/variables.css">
   <link rel="stylesheet" href="css/main.css">
+  <style>
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
 </head>
 <body>
 <div class="app-layout">
@@ -58,7 +61,7 @@
               style="width:100%;padding:8px 12px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:14px;resize:vertical;font-family:inherit;"></textarea>
           </div>
           <button onclick="submitObservation()"
-            style="width:100%;padding:10px;background:var(--color-primary);color:#fff;border:none;border-radius:var(--radius-sm);font-size:14px;font-weight:600;">
+            style="width:100%;padding:10px;background:var(--color-primary);color:#fff;border:none;border-radius:var(--radius-sm);font-size:14px;font-weight:600;cursor:pointer;">
             Enregistrer l'observation
           </button>
         </div>
@@ -77,6 +80,10 @@
               <option>OK</option><option>Risque maladie</option>
               <option>Maladie détectée</option><option>Stress hydrique</option>
             </select>
+            <button onclick="resetFiltres()"
+              style="padding:6px 12px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:12px;background:var(--bg-card);color:var(--text-secondary);cursor:pointer;white-space:nowrap;">
+              Réinitialiser
+            </button>
           </div>
         </div>
         <div style="padding:0;">
