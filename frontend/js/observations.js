@@ -1,0 +1,99 @@
+document.getElementById('topbar-date').textContent =
+  new Date().toLocaleDateString('fr-FR', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
+
+document.getElementById('obs-date').value = new Date().toISOString().split('T')[0];
+
+let allObs = [];
+let allParcelles = [];
+
+async function loadParcelles() {
+  allParcelles = await API.getParcelles();
+  ['obs-parcelle', 'filtre-parcelle'].forEach(id => {
+    const sel = document.getElementById(id);
+    allParcelles.forEach(p => {
+      const opt = document.createElement('option');
+      opt.value = p.id;
+      opt.textContent = `${p.nom} — ${p.localisation}`;
+      sel.appendChild(opt);
+    });
+  });
+}
+
+function renderObservations(liste) {
+  const tbody = document.getElementById('obs-tbody');
+  if (!liste.length) {
+    tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:var(--text-muted);padding:20px;">Aucune observation trouvée.</td></tr>';
+    return;
+  }
+  tbody.innerHTML = liste.map(o => {
+    const p = allParcelles.find(p => p.id === Number(o.parcelle_id));
+    return `<tr>
+      <td>${formatDate(o.date)}</td>
+      <td>${p ? p.nom : 'Parcelle ' + o.parcelle_id}</td>
+      <td>${BADGE_MAP[o.etat] || o.etat}</td>
+      <td style="color:var(--text-secondary);font-size:13px;">${o.commentaire || '—'}</td>
+    </tr>`;
+  }).join('');
+}
+
+function filtrer() {
+  const pid  = document.getElementById('filtre-parcelle').value;
+  const etat = document.getElementById('filtre-etat').value;
+  renderObservations(allObs.filter(o =>
+    (!pid  || String(o.parcelle_id) === pid) &&
+    (!etat || o.etat === etat)
+  ));
+}
+
+document.getElementById('filtre-parcelle').addEventListener('change', filtrer);
+document.getElementById('filtre-etat').addEventListener('change', filtrer);
+
+async function submitObservation() {
+  const msgEl = document.getElementById('form-msg');
+  const data  = {
+    date:        document.getElementById('obs-date').value,
+    parcelle_id: parseInt(document.getElementById('obs-parcelle').value),
+    etat:        document.getElementById('obs-etat').value,
+    commentaire: document.getElementById('obs-commentaire').value.trim(),
+  };
+
+  if (!data.date || !data.parcelle_id) {
+    msgEl.style.cssText = 'display:block;background:#FEE2E2;color:#991B1B;padding:10px 14px;border-radius:6px;margin-bottom:14px;font-size:14px;';
+    msgEl.textContent = 'Veuillez remplir la date et la parcelle.';
+    return;
+  }
+
+  if (USE_MOCK) {
+    const newObs = { id: allObs.length + 1, ...data };
+    allObs.unshift(newObs);
+    renderObservations(allObs);
+    msgEl.style.cssText = 'display:block;background:#D1FAE5;color:#065F46;padding:10px 14px;border-radius:6px;margin-bottom:14px;font-size:14px;';
+    msgEl.textContent = 'Observation enregistrée (mode démo).';
+    document.getElementById('obs-commentaire').value = '';
+    setTimeout(() => { msgEl.style.display = 'none'; }, 3000);
+    return;
+  }
+
+  try {
+    await fetch(`${API_BASE}/observations`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    });
+    msgEl.style.cssText = 'display:block;background:#D1FAE5;color:#065F46;padding:10px 14px;border-radius:6px;margin-bottom:14px;font-size:14px;';
+    msgEl.textContent = 'Observation enregistrée avec succès !';
+    allObs = await API.getObservations();
+    filtrer();
+    document.getElementById('obs-commentaire').value = '';
+    setTimeout(() => { msgEl.style.display = 'none'; }, 3000);
+  } catch {
+    msgEl.style.cssText = 'display:block;background:#FEE2E2;color:#991B1B;padding:10px 14px;border-radius:6px;margin-bottom:14px;font-size:14px;';
+    msgEl.textContent = 'Erreur de connexion au serveur.';
+  }
+}
+
+(async () => {
+  await loadParcelles();
+  allObs = await API.getObservations();
+  renderObservations(allObs);
+})();
