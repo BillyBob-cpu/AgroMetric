@@ -1,0 +1,22 @@
+:root {
+  --color-primary:       #2D6A4F;
+  --color-primary-light: #52B788;
+  --color-danger:        #E63946;
+  --color-warning:       #F4A261;
+  --color-success:       #2A9D8F;
+  --color-info:          #457B9D;
+
+  --bg-page:    #F4F6F0;
+  --bg-card:    #FFFFFF;
+  --bg-sidebar: #1B3A2D;
+
+  --text-primary:   #1A1A1A;
+  --text-secondary: #5C5C5C;
+  --text-muted:     #9A9A9A;
+
+  --border:    #E2E8E0;
+  --radius:    10px;
+  --radius-sm: 6px;
+  --shadow:    0 1px 3px rgba(0,0,0,0.08);
+  --font:      'Inter', 'Segoe UI', sans-serif;
+}
