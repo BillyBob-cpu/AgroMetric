@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>AgroSuivi — Observations</title>
-  <meta name="description" content="Saisie et historique des observations terrain sur les parcelles agricoles.">
+  <meta name="description" content="Saisie et historique des observations terrain.">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌾</text></svg>">
   <link rel="stylesheet" href="css/reset.css">
   <link rel="stylesheet" href="css/variables.css">
@@ -12,12 +12,10 @@
 </head>
 <body>
 <div class="app-layout">
-
   <header class="topbar">
     <div class="topbar-logo"><span>🌾</span> AgroSuivi</div>
     <div class="topbar-date" id="topbar-date"></div>
   </header>
-
   <nav class="sidebar">
     <div class="nav-section">Navigation</div>
     <a href="index.html"        class="nav-item"><span class="nav-icon">📊</span> Tableau de bord</a>
@@ -25,18 +23,15 @@
     <a href="observations.html" class="nav-item active"><span class="nav-icon">📝</span> Observations</a>
     <a href="alertes.html"      class="nav-item"><span class="nav-icon">🔔</span> Alertes</a>
   </nav>
-
   <main class="main-content">
     <h1 class="page-title">Observations terrain</h1>
     <p class="page-subtitle">Saisie et historique des états de cultures</p>
 
     <div style="display:grid;grid-template-columns:320px 1fr;gap:24px;align-items:start;">
-
       <div class="card">
         <div class="card-header">Nouvelle observation</div>
         <div class="card-body">
           <div id="form-msg" style="display:none;padding:10px 14px;border-radius:var(--radius-sm);margin-bottom:14px;font-size:14px;"></div>
-
           <div style="margin-bottom:14px;">
             <label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:5px;">DATE</label>
             <input type="date" id="obs-date" style="width:100%;padding:8px 12px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:14px;">
@@ -77,23 +72,18 @@
             </select>
             <select id="filtre-etat" style="padding:6px 10px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:13px;background:var(--bg-card);">
               <option value="">Tous les états</option>
-              <option>OK</option>
-              <option>Risque maladie</option>
-              <option>Maladie détectée</option>
-              <option>Stress hydrique</option>
+              <option>OK</option><option>Risque maladie</option>
+              <option>Maladie détectée</option><option>Stress hydrique</option>
             </select>
           </div>
         </div>
         <div style="padding:0;">
           <table class="data-table">
             <thead><tr><th>Date</th><th>Parcelle</th><th>État</th><th>Commentaire</th></tr></thead>
-            <tbody id="obs-tbody">
-              <tr><td colspan="4" style="text-align:center;color:var(--text-muted);padding:20px;">Chargement…</td></tr>
-            </tbody>
+            <tbody id="obs-tbody"></tbody>
           </table>
         </div>
       </div>
-
     </div>
   </main>
 </div>

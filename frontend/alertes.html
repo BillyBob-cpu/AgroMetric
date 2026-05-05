@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>AgroSuivi — Alertes</title>
-  <meta name="description" content="Alertes agricoles actives : risques maladies, stress hydrique, niveaux de criticité 1 à 3.">
+  <meta name="description" content="Alertes agricoles actives : risques maladies et stress hydrique.">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌾</text></svg>">
   <link rel="stylesheet" href="css/reset.css">
   <link rel="stylesheet" href="css/variables.css">
@@ -12,12 +12,10 @@
 </head>
 <body>
 <div class="app-layout">
-
   <header class="topbar">
     <div class="topbar-logo"><span>🌾</span> AgroSuivi</div>
     <div class="topbar-date" id="topbar-date"></div>
   </header>
-
   <nav class="sidebar">
     <div class="nav-section">Navigation</div>
     <a href="index.html"        class="nav-item"><span class="nav-icon">📊</span> Tableau de bord</a>
@@ -25,7 +23,6 @@
     <a href="observations.html" class="nav-item"><span class="nav-icon">📝</span> Observations</a>
     <a href="alertes.html"      class="nav-item active"><span class="nav-icon">🔔</span> Alertes</a>
   </nav>
-
   <main class="main-content">
     <h1 class="page-title">Alertes</h1>
     <p class="page-subtitle">Détection automatique par règles métier</p>
@@ -65,10 +62,8 @@
       </select>
       <select id="filtre-type" style="padding:8px 12px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:14px;background:var(--bg-card);">
         <option value="">Tous les types</option>
-        <option>Risque maladie</option>
-        <option>Stress hydrique</option>
-        <option>Excès eau</option>
-        <option>Maladie détectée</option>
+        <option>Risque maladie</option><option>Stress hydrique</option>
+        <option>Excès eau</option><option>Maladie détectée</option>
       </select>
     </div>
 
@@ -77,9 +72,7 @@
       <div style="padding:0;">
         <table class="data-table">
           <thead><tr><th>Niveau</th><th>Type</th><th>Parcelle</th><th>Date</th><th>Source</th></tr></thead>
-          <tbody id="alertes-tbody">
-            <tr><td colspan="5" style="text-align:center;color:var(--text-muted);padding:20px;">Chargement…</td></tr>
-          </tbody>
+          <tbody id="alertes-tbody"></tbody>
         </table>
       </div>
     </div>

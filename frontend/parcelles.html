@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>AgroSuivi — Parcelles</title>
-  <meta name="description" content="Gestion et suivi des parcelles agricoles : cultures associées, états et historique.">
+  <meta name="description" content="Gestion et suivi des parcelles agricoles.">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌾</text></svg>">
   <link rel="stylesheet" href="css/reset.css">
   <link rel="stylesheet" href="css/variables.css">
@@ -12,12 +12,10 @@
 </head>
 <body>
 <div class="app-layout">
-
   <header class="topbar">
     <div class="topbar-logo"><span>🌾</span> AgroSuivi</div>
     <div class="topbar-date" id="topbar-date"></div>
   </header>
-
   <nav class="sidebar">
     <div class="nav-section">Navigation</div>
     <a href="index.html"        class="nav-item"><span class="nav-icon">📊</span> Tableau de bord</a>
@@ -25,7 +23,6 @@
     <a href="observations.html" class="nav-item"><span class="nav-icon">📝</span> Observations</a>
     <a href="alertes.html"      class="nav-item"><span class="nav-icon">🔔</span> Alertes</a>
   </nav>
-
   <main class="main-content">
     <h1 class="page-title">Parcelles</h1>
     <p class="page-subtitle">10 parcelles actives — saison 2026</p>
@@ -33,23 +30,18 @@
     <div style="display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap;">
       <select id="filtre-zone" style="padding:8px 12px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:14px;background:var(--bg-card);">
         <option value="">Toutes les zones</option>
-        <option>Zone A</option><option>Zone B</option>
-        <option>Zone C</option><option>Zone D</option><option>Zone E</option>
+        <option>Zone A</option><option>Zone B</option><option>Zone C</option><option>Zone D</option><option>Zone E</option>
       </select>
       <select id="filtre-culture" style="padding:8px 12px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:14px;background:var(--bg-card);">
         <option value="">Toutes les cultures</option>
-        <option>Blé</option><option>Maïs</option>
-        <option>Orge</option><option>Tournesol</option><option>Colza</option>
+        <option>Blé</option><option>Maïs</option><option>Orge</option><option>Tournesol</option><option>Colza</option>
       </select>
       <input type="text" id="filtre-search" placeholder="Rechercher…"
         style="padding:8px 12px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:14px;flex:1;min-width:160px;">
     </div>
 
-    <div id="parcelles-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;">
-      <p style="color:var(--text-muted)">Chargement…</p>
-    </div>
+    <div id="parcelles-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;"></div>
 
-    <!-- Modal -->
     <div id="modal-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:200;align-items:center;justify-content:center;padding:20px;">
       <div style="background:var(--bg-card);border-radius:var(--radius);width:100%;max-width:520px;overflow:hidden;">
         <div style="padding:18px 22px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;">
