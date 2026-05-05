@@ -1,0 +1,37 @@
+name: AgroMetric CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  validation-backend:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout du dépôt
+      uses: actions/checkout@v4
+
+    - name: Setup Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.10" # Adapte si tu utilises une autre version
+
+    - name: Installation des dépendances (Backend)
+      run: |
+        python -m pip install --upgrade pip
+        pip install flake8 pytest
+        # Cible explicitement le dossier backend vu sur le dépôt
+        if [ -f backend/requirements.txt ]; then pip install -r backend/requirements.txt; fi
+
+    - name: Analyse de la syntaxe (Linting)
+      run: |
+        # Cherche les erreurs fatales uniquement dans le dossier backend/
+        flake8 backend/ --count --select=E9,F63,F7,F82 --show-source --statistics
+        
+    - name: Exécution des tests (Pytest)
+      run: |
+        # Lance les tests si le dossier backend/tests/ ou des fichiers test_*.py existent
+        pytest backend/
