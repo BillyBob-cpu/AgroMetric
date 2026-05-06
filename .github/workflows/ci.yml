@@ -8,88 +8,55 @@ on:
 
 jobs:
 
-  # ── Qualité du code Python ──────────────────────
   code-quality:
     runs-on: ubuntu-latest
     steps:
-      
+      - name: Récupération du code
+        uses: actions/checkout@v4
 
-    name: Récupération du code
-          uses: actions/checkout@v4
+      - name: Configuration Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
 
+      - name: Installation des dépendances
+        run: |
+          pip install flask flask-cors psycopg2-binary python-dotenv
+          pip install flake8
 
-      
+      - name: Lint du code Python
+        run: flake8 backend/ --max-line-length=120 --exclude=__pycache__
 
-    name: Configuration Python
-          uses: actions/setup-python@v5
-          with:
-            python-version: '3.11'
-
-
-      
-
-    name: Installation des dépendances
-          run: |
-            pip install flask flask-cors psycopg2-binary python-dotenv
-            pip install flake8
-
-
-      
-
-    name: Lint du code Python (flake8)
-          run: flake8 backend/ --max-line-length=120 --exclude=pycache
-
-
-  # ── Scan des secrets ────────────────────────────
   secrets-scan:
     runs-on: ubuntu-latest
     steps:
-      
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-    uses: actions/checkout@v4
-          with:
-            fetch-depth: 0
+      - name: Scan des secrets avec TruffleHog
+        uses: trufflesecurity/trufflehog@main
+        with:
+          extra_args: --only-verified
 
-
-      
-
-    name: Scan des secrets avec TruffleHog
-          uses: trufflesecurity/trufflehog@main
-          with:
-            extra_args: --only-verified
-
-
-  # ── Analyse statique sécurité ───────────────────
   sast:
     runs-on: ubuntu-latest
     steps:
-      
+      - uses: actions/checkout@v4
 
-    uses: actions/checkout@v4
+      - name: Analyse statique Semgrep
+        uses: semgrep/semgrep-action@v1
+        with:
+          config: p/owasp-top-ten
 
-
-      
-
-    name: Analyse statique Semgrep (OWASP Top 10)
-          uses: semgrep/semgrep-action@v1
-          with:
-            config: p/owasp-top-ten
-
-
-  # ── Scan des dépendances ────────────────────────
   dependency-scan:
     runs-on: ubuntu-latest
     steps:
-      
+      - uses: actions/checkout@v4
 
-    uses: actions/checkout@v4
-
-
-      
-
-    name: Scan des dépendances Trivy
-          uses: aquasecurity/trivy-action@master
-          with:
-            scan-type: fs
-            severity: HIGH,CRITICAL
-            exit-code: 1
+      - name: Scan des dépendances Trivy
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: fs
+          severity: HIGH,CRITICAL
+          exit-code: 1
