@@ -1,5 +1,5 @@
 const USE_MOCK = false;
-const API_BASE = 'http://192.168.16.133/api';
+const API_BASE = 'http://192.168.16.134/api';
 
 const MOCK_PARCELLES = [
   { id:1,  nom:'Parcelle 1',  localisation:'Zone A', surface_ha:2.45, culture_type:'Orge',      date_semis:'2026-03-15', dernier_etat:'Maladie détectée', alertes_critiques:1 },
@@ -81,3 +81,8 @@ const API = {
   ),
   getAlertes: () => fetchData('/alertes', MOCK_ALERTES),
 };
+
+function logout() {
+  localStorage.removeItem('agro_user');
+  window.location.href = 'login.html';
+}
