@@ -78,5 +78,39 @@ python app.py
 | Prénom NOM   | Infrastructure · Déploiement |
 
 ## Architecture
+```mermaid
+flowchart TD
+    %% Configuration des styles pour correspondre à ton image
+    classDef nodeBox fill:#ffffff,stroke:#000066,stroke-width:1px,color:#000066;
+    classDef invisible fill:none,stroke:none;
 
-Voir `docs/architecture.png`
+    U["Utilisateur Agriculteur\n(4G / WiFi)"]:::nodeBox
+
+    subgraph Z_EXT ["INTERNET / PROTECTION EXTERNE"]
+        direction LR
+        WAF["WAF (Web Application Firewall) :\nFiltre les attaques (DDoS, SQLi)"]:::nodeBox
+        SSL["SSL/TLS :\nChiffrement du flux\n(HTTPS)"]:::nodeBox
+    end
+
+    subgraph Z_PUB ["ZONE PUBLIQUE (DMZ)"]
+        NGINX["SERVEUR NGINX\n(PROXY REVERSE)\nPoint d'entrée unique,\nLoad Balancing basique\n(en local), Protection"]:::nodeBox
+    end
+
+    subgraph Z_APP ["ZONE APPLICATIVE"]
+        APP["APPLICATION AGRICOLE (MVP)\n- Instance Unique (Backend & Logiciel)\n- Python (Flask/FastAPI) ou Node.js/Express\n- Gestion des Parcelles, Cultures, & Observations\n- Météo & Système d'alertes & Analyse (Rules Engine)"]:::nodeBox
+    end
+
+    subgraph Z_PRIV ["ZONE PRIVÉE (ISOLÉE)"]
+        BDD["BASE DE DONNÉES CENTRALE (PostgreSQL)\nStockage de TOUTES les données structurées (MCD/MLD)\nParcelles, Cultures, Météo, Historiques, Utilisateurs"]:::nodeBox
+        S3["STOCKAGE ASSETS STATIQUES\n(S3 / Object Storage) -\nAuthentification"]:::nodeBox
+        DIFF["Diffusion fluide"]:::nodeBox
+        
+        S3 --> DIFF
+    end
+
+    %% Définition des flux principaux entre les zones
+    U --> Z_EXT
+    Z_EXT --> Z_PUB
+    Z_PUB --> Z_APP
+    Z_APP -->|Flux Interne| Z_PRIV
+```
